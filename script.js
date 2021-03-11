@@ -13,7 +13,7 @@ if (input.value === '') {
     setError(input, 'Field can not be empty')
     return false
 }
-else if (input.value.trim().length < 3) {
+else if (input.value.trim().length < 2) {
     setError(input, 'Too short')
     return false
 }
@@ -27,23 +27,39 @@ const validateEmail = (input) => {
     const mailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;;
     if (input.value === '') {
         setError(input, 'Email can not be empty')
-        return false
+        return false;
     }
     else if (found) {
         setError(input, 'Email already exist')
         console.log('Email already exist');
-        return false
+        return false;
     }
     else if  (!mailFormat.test(input.value)) {
         setError(input, 'Invalid email')
-        return false
+        return false;
     }
     else {
         setSuccess(input)
-        return true
+        return true;
     }
     }
 
+
+    const validateEditedEmail = (input) => {
+        const mailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;;
+        if (input.value === '') {
+            setError(input, 'Email can not be empty')
+            return false;
+        }
+        else if  (!mailFormat.test(input.value)) {
+            setError(input, 'Invalid email')
+            return false;
+        }
+        else {
+            setSuccess(input)
+            return true;
+        }
+        }
 const validateCheckbox = input => {
     if (input.checked) {
         setSuccess(input)
@@ -54,7 +70,7 @@ const validateCheckbox = input => {
         return false
     }
 }
-let inValid = false;
+
 
 const setError = (input, message) => {
 const inputGroup = input.parentElement;
@@ -63,17 +79,14 @@ inputGroup.classList.remove('valid')
 
 const error = inputGroup.querySelector('p');
 error.innerText = message;
-return false
-//inValid = false;
-
+return false;
 }
 
 const setSuccess = (input) => {
     const inputGroup = input.parentElement;
     inputGroup.classList.remove('invalid')
     inputGroup.classList.add('valid')
-    return true
-    //inValid = true;
+    return true;
 }
 
 
@@ -88,44 +101,40 @@ const createUser = (firstName, secondName, email) => {
      //users = [...users, user]
  }
 
- const createUserForm = id => {
-    editCard.innerHTML = '';
+ 
+  const createUserForm = id => {
+    //editCard.innerHTML = '';
+    editCard.classList.remove('hide')
     let user = users.find(user => user.id === id)
-   // memberCard.classList.toggle('collapse')
-   // editCard.classList.toggle('collapse')
+   
   
-    console.log(id)
     let template =
     `
-    <div id="editCard">
-      <h1>Edit user</h1>
-    <div class="row">
-        <div class="form-goup ">
-          <input type="text" id="firstName-edit" class="form-control" value="${user.firstName}" placeholder="First Name">
-          <div class="invalid-feedback">
-            Please enter your firstname atleast 2 characters long.
-          </div>
+    <div id="editCard" class="mb-2" >
+    <div class="edit-form">
+        <div class="form-group ">
+          <input type="text" id="editedFirstName" class="form-control" value="${user.firstName}" >
+          <p  class='errorMessage'></p>
         </div>
-        <div class="form-goup ">
-          <input type="text" id="lastName-edit" class="form-control" value="${user.secondName}" placeholder="Last Name">
-          <
+        <div class="form-group">
+          <input type="text" id="editedLastName" class="form-control" value="${user.secondName}" >
+          <p  class='errorMessage'></p>
         </div>
-        <div class="form-goup ">
-          <input type="email" id="email-edit" class="form-control" value="${user.email}" placeholder="Please enter your email">
+        <div class="form-group">
+          <input type="email" id="editedEmail" class="form-control" value="${user.email}" placeholder="Please enter your email">
+          <p  class='errorMessage'></p>
         </div>
-       
-      
-      </div>
-      <button type ='submit' id="editUserInput"  >Save</button>
+        </div>
+      <button type ='button' id="editButton" class='btn btn-primary'>Save</button>
       </div>
       `
   
       editCard.innerHTML = template;
-      const firstNameEdit = document.querySelector('#firstName-edit')
-      const lastNameEdit = document.querySelector('#lastName-edit')
-      const emailEdit = document.querySelector('#email-edit')
+      const firstNameEdit = document.querySelector('#editedFirstName')
+      const lastNameEdit = document.querySelector('#editedLastName')
+      const emailEdit = document.querySelector('#editedEmail')
 
-      const saveBtn = document.querySelector('#editUserInput')
+      const saveBtn = document.querySelector('#editButton')
       saveBtn.addEventListener('click', (e) => {
          // e.preventDefault();
          // const user = users.find(user => user.id === id)
@@ -133,11 +142,15 @@ const createUser = (firstName, secondName, email) => {
         user.firstName = firstNameEdit.value
         user.secondName = lastNameEdit.value
         user.email = emailEdit.value
-        console.log("user", user)
-        console.log("working")
-
+        console.log("user.firstName", firstNameEdit)
+        validate(firstNameEdit);
+        validate(lastNameEdit);
+        validateEditedEmail(emailEdit);
+        if (validate(firstNameEdit) && validateEditedEmail (emailEdit) && validate(lastNameEdit))
+       { 
         content.innerHTML =  createMarkup();
         editCard.classList.add('hide')
+    }
       })
   }
 
@@ -146,12 +159,11 @@ const options = e => {
     if (e.target.dataset) {
       if (e.target.dataset.btn === 'edit') {
         const id = e.target.closest('[data-id]').dataset.id;
-        console.log('edit');
         createUserForm(id);
       } else if (e.target.dataset.btn === 'delete') {
         console.log('delete');
         const id = e.target.closest('[data-id]').dataset.id;
-        deleteUser(users, id);
+        deleteUser(id);
       } else return;
     } else return;
   };
@@ -160,17 +172,34 @@ content.addEventListener('click', options)
 
 
 
+const deleteUser = (id) => { 
+    //users.splice(users.findIndex(a => a.id === id) , 1)
+   users = users.filter(user => user.id !== id);
+    //console.log(id);
+    //console.log(users);
+    content.innerHTML =  createMarkup();
+    
+        //li.closest("li").remove();*/
+        return users
+        
+} 
 const createMarkup = () => {
 
 //const template = () => {
     return users.reduce((acc, user) => {
        acc+= `
-       <li data-id="${user.id}">
-        <p>${user.firstName}</p>
+       <li class='cards mb-2' data-id="${user.id}">
+       <div > 
+       <div class='contact-info'>
+       <p>${user.firstName}</p>
         <p>${user.secondName}</p>
+        </div> 
         <p>${user.email}</p>
-        <button type="button" data-btn="edit"> Edit </button>
-        <button type="button" data-btn="delete"> Delete </button>
+        </div>
+        <div class='button-set'> 
+        <button type="button" class='btn btn-success' data-btn="edit"> Edit </button>
+        <button type="button" class='btn btn-danger' data-btn="delete"> Delete </button>
+        </div>
         </li>
         `
     return acc
@@ -188,9 +217,9 @@ const createMarkup = () => {
 form.addEventListener('submit', event => {
    event.preventDefault();
     validate(firstName);
-    //validate(secondName);
-    //validateEmail(email);
-    //validateCheckbox(checkbox);
+    validate(secondName);
+    validateEmail(email);
+    validateCheckbox(checkbox);
     if (validate(firstName) && validateEmail(email) && validate(secondName) && validateCheckbox(checkbox) )
     {createUser(firstName.value, secondName.value, email.value)
         content.innerHTML =  createMarkup();
@@ -199,29 +228,6 @@ form.addEventListener('submit', event => {
 }
 })
 
-const deleteUser = (users, id) => { 
-    users.splice(users.findIndex(a => a.id === id) , 1)
-   // users = [...users.filter(user => user.id !== id)];
-    console.log(id);
-    console.log(users);
-    /*const ind = users.indexOf(users.id)
-    console.log(ind);*/
-        content.innerHTML =    users.reduce((acc, user) => {
-            acc+= `
-            <li data-id="${user.id}">
-             <p>${user.firstName}</p>
-             <p>${user.secondName}</p>
-             <p>${user.email}</p>
-             <button type="button" data-btn="edit"> Edit </button>
-             <button type="button" data-btn="delete"> Delete </button>
-             </li>
-             `
-         return acc
-         }, '' )
-        //li.closest("li").remove();*/
-        return users
-        
-} 
 /*const createUserForm = id => {
    
     const editableUser = users.find(user => user.id === id);

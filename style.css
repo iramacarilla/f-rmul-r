@@ -2,10 +2,20 @@
     border: red solid 1px;
     outline: red solid 1px;
 }
+.invalid p  {
+    color: red ;
+    font-size: 12px;
+}
 .valid input {
     border: rgb(24, 112, 78) solid 1px;
-   outline: rgb(24, 112, 78) solid 1px;
+    outline: rgb(24, 112, 78) solid 1px;
 }
+.valid p {
+    visibility: hidden;
+}
+
+
+
 body {
     font-family: "Lato", sans-serif;
     color: black;
@@ -22,17 +32,26 @@ body {
     padding: 40px;
   }
   
-  .invalid {
-    border: 1px solid red;
-  }
+  .cards {
+    padding: 10px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
   
-  .mb-2 {
-    margin-bottom: 20px;
-  }
-  
-  .mb-4 {
-    margin-bottom: 40px;
-  }
+.contact-info{
+    display: flex;
+}
+.contact-info p {
+    margin-right: 20px;
+}
   
   p {
     font-size: 20px;
@@ -80,6 +99,7 @@ body {
   
   .form-button {
     color: black;
+    margin-bottom: 40px;
     padding: 10px 30px;
     border: 1px solid rgb(0, 114, 66);
     border-radius: 10px;
@@ -100,6 +120,8 @@ body {
   
   form {
     padding: 40px;
+    width: 80%;
+    margin: 0 auto;
   }
   
   hr {
@@ -108,4 +130,21 @@ body {
     height: 1px;
     border: none;
     background-color: rgb(0, 114, 66);
+  }
+
+  #editCard {
+      display: flex;
+      justify-content: center;
+  }
+  .form-group {
+      display: flex;
+      flex-direction: column;
+  }
+  .edit-form {
+      display: flex;
+      justify-content: center;
+  }
+  #editButton {
+    height: 38px;
+    padding: .375rem 2rem;
   }
